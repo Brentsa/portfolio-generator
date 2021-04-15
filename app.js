@@ -11,9 +11,9 @@ const inquirer = require('inquirer');
 // });
 
 
-function promptUser()
+const promptUser = () =>
 {
-  inquirer.prompt([
+  return inquirer.prompt([
     {
       type: "input", 
       name: "name",
@@ -23,9 +23,73 @@ function promptUser()
       type: "input",
       name: "github",
       message: "What is your github username?"
+    },
+    {
+      type: "input",
+      name: "about",
+      message: "Enter a description about yourself."
     }
-  ])
-  .then(answer => console.log(answer));
+  ]);
 }
 
-promptUser();
+const promptProject = portfolioData =>
+{
+  if(!portfolioData.projects) 
+    portfolioData.projects = [];
+
+  console.log(`
+  =================
+  Add a New Project
+  =================
+  `);
+
+  return inquirer.prompt([
+    {
+      type: "input",
+      name: "name",
+      message: "What is the name of your project?"
+    },
+    {
+      type: "input",
+      name: "description",
+      message: "Enter a project description."
+    },
+    {
+      type: "checkbox",
+      name: "languages",
+      message: "What languages did you build this project with? (Check all that apply.)",
+      choices: ["JavaScript", "HTML", "CSS", "ES6", "jQuery", "Bootstrap", "Node"]
+    },
+    {
+      type: "input",
+      name: "link",
+      message: "Enter a GitHub link to your project. (Required)"
+    },
+    {
+      type: "confirm",
+      name: "feature",
+      message: "Would you like to feature this project?",
+      default: false
+    },
+    {
+      type: "confirm",
+      name: "confirmAddProject",
+      message: "Would you like to add another project?",
+      default: false
+    }
+  ])
+  .then(projectData => {
+    portfolioData.projects.push(projectData);
+    
+    if(projectData.confirmAddProject)
+      return promptProject(portfolioData);
+    else
+      return portfolioData;
+  });
+}
+
+promptUser()
+.then(promptProject)
+.then(portfolioData => {
+  console.log(portfolioData);
+}); 
