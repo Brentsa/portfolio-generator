@@ -125,24 +125,6 @@ const promptProject = portfolioData =>
 }
 
 promptUser()
-.then(promptProject)
-.then(portfolioData => {
-  const pageHTML = generatePage(portfolioData); 
-
-  fs.writeFile("./dist/index.html", pageHTML, err => {
-    if(err) throw err;
-
-    console.log(`The file was created successfully! Check index.html for the site`);
-
-    fs.copyFile("./src/style.css", "./dist/style.css", err => {
-      if(err) throw err;
-    
-      console.log(`The file style.css was copied into the dist folder properly`);
-    });
-  });
-}); 
-
-promptUser()
   .then(promptProject)
   .then(portfolioData=>{
     return generatePage(portfolioData);
